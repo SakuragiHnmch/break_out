@@ -30,6 +30,7 @@ void SpriteRenderer::DrawSprite(const Texture2D &texture, glm::vec2 position, gl
 
     glActiveTexture(GL_TEXTURE0);
     texture.Bind();
+//    glBindTexture(GL_TEXTURE_2D, texture.ID);
 
     glBindVertexArray(this->quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);

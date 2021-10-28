@@ -32,7 +32,7 @@ void Game::Init()
 //    Shader temShader = ResourceManager::GetShader("sprite");
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
     // load textures
-     ResourceManager::LoadTexture("../images/container.jpg", "face");
+     ResourceManager::LoadTexture("../images/awesomeface.png", "face");
 }
 
 void Game::Update(float dt)
