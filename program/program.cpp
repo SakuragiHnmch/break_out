@@ -37,7 +37,9 @@ int main(int argc, char *argv[]) {
     glfwSetKeyCallback(window, key_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    glViewport(0, 0, width, height);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -85,6 +87,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
             Breakout.Keys[key] = false;
     }
 }
+
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     // make sure the viewport matches the new window dimensions;

@@ -6,4 +6,12 @@ include_directories(../3rd/glfw/include)
 
 # create a library
 add_library(game STATIC src/game.cpp)
-target_include_directories(game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/../resources/include ${CMAKE_CURRENT_SOURCE_DIR}/../renderer/include)
+target_link_libraries(game resource renderer)
+
+# resource copy
+add_custom_command(
+        TARGET game PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E
+        copy_directory ${PROJECT_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}
+)
