@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-class Texture2D {
+class MTexture2D {
 public:
     unsigned int ID;
     unsigned int Width, Height;
@@ -16,7 +16,7 @@ public:
     unsigned int Filter_Min; // filtering mode if texture pixels < screen pixels
     unsigned int Filter_Max; // filtering mode if texture pixels > screen pixels
 
-    Texture2D();
+    MTexture2D();
     void Generate(unsigned int width, unsigned int height, unsigned char* data);
     //bind the texture as the current active GL_TEXTURE_2D texture object
     void Bind() const;

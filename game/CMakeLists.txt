@@ -5,9 +5,14 @@ include_directories(../3rd/stb_image)
 include_directories(../3rd/glfw/include)
 
 # create a library
-add_library(game STATIC src/game.cpp)
-target_include_directories(game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/../resources/include ${CMAKE_CURRENT_SOURCE_DIR}/../renderer/include)
-target_link_libraries(game resource renderer)
+set (SOURCES
+        src/game.cpp
+        src/game_obj.cpp
+)
+
+add_library(game STATIC ${SOURCES})
+target_include_directories(game PUBLIC include ../utility/include)
+target_link_libraries(game utility)
 
 # resource copy
 add_custom_command(

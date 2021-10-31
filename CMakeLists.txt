@@ -10,8 +10,4 @@ add_subdirectory(game)
 
 add_subdirectory(utility)
 
-add_subdirectory(resource_manager)
-
-add_subdirectory(renderer)
-
 add_subdirectory(program)

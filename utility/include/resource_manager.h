@@ -17,15 +17,15 @@ class ResourceManager {
 public:
     // resource storage
     static std::map<std::string, Shader> Shaders;
-    static std::map<std::string, Texture2D> Textures;
+    static std::map<std::string, MTexture2D> Textures;
     // loads (and generates) a shader program from file loading vertex, fragment shader`s source code.
     static Shader LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name);
     //retrieves a stored shader
     static Shader GetShader(std::string name);
 
-    static Texture2D LoadTexture(const char *file, std::string name);
+    static MTexture2D LoadTexture(const char *file, std::string name);
 
-    static Texture2D GetTexture(std::string name);
+    static MTexture2D GetTexture(std::string name);
 
     static void Clear();
 
@@ -35,7 +35,7 @@ private:
 
     static Shader loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile = nullptr);
 
-    static Texture2D loadTextureFromFile(const char *file);
+    static MTexture2D loadTextureFromFile(const char *file);
     
 };
 

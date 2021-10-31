@@ -8,7 +8,7 @@
 #include "stb_image.h"
 
 // Instantiate static variables
-std::map<std::string, Texture2D> ResourceManager::Textures;
+std::map<std::string, MTexture2D> ResourceManager::Textures;
 std::map<std::string, Shader> ResourceManager::Shaders;
 
 Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name) {
@@ -20,12 +20,12 @@ Shader ResourceManager::GetShader(std::string name) {
     return Shaders[name];
 }
 
-Texture2D ResourceManager::LoadTexture(const char *file, std::string name) {
+MTexture2D ResourceManager::LoadTexture(const char *file, std::string name) {
     Textures[name] = loadTextureFromFile(file);
     return Textures[name];
 }
 
-Texture2D ResourceManager::GetTexture(std::string name) {
+MTexture2D ResourceManager::GetTexture(std::string name) {
     return Textures[name];
 }
 
@@ -77,9 +77,9 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
     return shader;
 }
 
-Texture2D ResourceManager::loadTextureFromFile(const char *file) {
+MTexture2D ResourceManager::loadTextureFromFile(const char *file) {
     // create texture object
-    Texture2D texture;
+    MTexture2D texture;
 
     //load image
     int width, height, nrChannels;
