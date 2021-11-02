@@ -8,6 +8,7 @@ include_directories(../3rd/glfw/include)
 set (SOURCES
         src/game.cpp
         src/game_obj.cpp
+        src/game_level.cpp
 )
 
 add_library(game STATIC ${SOURCES})

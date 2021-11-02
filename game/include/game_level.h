@@ -27,6 +27,6 @@ public:
 private:
     // initialize level from tile data
     void init(std::vector<std::vector<unsigned int>> tileData, unsigned int levelWidth, unsigned int levelHeight);
-}
+};
 
 #endif

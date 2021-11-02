@@ -1,51 +1,87 @@
 #include "game.h"
 #include <resource_manager.h>
 #include <renderer.h>
+#include "game_obj.h"
 
 
 //game-related state data
 SpriteRenderer *Renderer;
+GameObject *Player;
 
 Game::Game(unsigned int width, unsigned int height)
-        : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
-{
+        : State(GAME_ACTIVE), Keys(), Width(width), Height(height) {
 
 }
 
 
 Game::~Game() {
     delete Renderer;
+    delete Player;
 }
 
 
-void Game::Init()
-{
+void Game::Init() {
     // load shaders
     ResourceManager::LoadShader("../shaders/face.vs", "../shaders/face.fs", nullptr, "sprite");
+    // configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width), static_cast<float>(this->Height), 0.0f, -1.0f, 1.0f);
-
-
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
     ResourceManager::GetShader("sprite").Use().SetMatrix4("projection", projection);
+
     //set render-specific controls
-    //这里和第46行为什么不能直接使用GetShader函数的返回值作为函数参数，有待研究---- (引用形参需要加上const)
-//    Shader temShader = ResourceManager::GetShader("sprite");
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
+
     // load textures
-     ResourceManager::LoadTexture("../images/awesomeface.png", "face");
+    ResourceManager::LoadTexture("../images/background.jpeg", "background");
+    ResourceManager::LoadTexture("../images/block.png", "block");
+    ResourceManager::LoadTexture("../images/block_solid.png", "block_solid");
+    ResourceManager::LoadTexture("../images/paddle.png", "paddle");
+
+    // load levels
+    GameLevel one;
+    one.Load("../levels/one.lvl", this->Width, this->Height / 2);
+    GameLevel two;
+    two.Load("../levels/two.lvl", this->Width, this->Height / 2);
+    GameLevel three;
+    three.Load("../levels/three.lvl", this->Width, this->Height / 2);
+    GameLevel four;
+    four.Load("../levels/four.lvl", this->Width, this->Height / 2);
+    this->Levels.push_back(one);
+    this->Levels.push_back(two);
+    this->Levels.push_back(three);
+    this->Levels.push_back(four);
+    this->Level = 0;
+
+    // configure gameobjects
+    glm::vec2 playerPos = glm::vec2(this->Width / 2.0f - PLAYER_SIZE.x / 2.0f, this->Height - PLAYER_SIZE.y);
+    Player = new GameObject(playerPos, PLAYER_SIZE, ResourceManager::GetTexture("paddle"));
 }
 
-void Game::Update(float dt)
-{
+void Game::Update(float dt) {
 
 }
 
-void Game::ProcessInput(float dt)
-{
+void Game::ProcessInput(float dt) {
+    if (this->State == GAME_ACTIVE) {
+        float velocity = PLAYER_VELOCITY * dt;
+        // move playerboard
+        if (this->Keys[GLFW_KEY_A]) {
+            if (Player->Position.x >= 0.0f) 
+                Player->Position.x -= velocity;
+        }
 
+        if (this->Keys[GLFW_KEY_D]) {
+            if(Player->Position.x <= this->Width - Player->Size.x)
+                Player->Position.x += velocity;
+        }
+    }
 }
 
-void Game::Render()
-{
-    Renderer->DrawSprite(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 200.0f), glm::vec2(150.0f, 150.0f), 30.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+void Game::Render() {
+    // draw background
+    Renderer->DrawSprite(ResourceManager::GetTexture("background"), glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f);
+    // draw level
+    this->Levels[this->Level].Draw(*Renderer);
+    //draw player
+    Player->Draw(*Renderer);
 }
