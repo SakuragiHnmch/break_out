@@ -68,6 +68,7 @@ void Game::Init() {
 
 void Game::Update(float dt) {
     Ball->Move(dt, this->Width);
+    this->DoCollisions();
 }
 
 void Game::ProcessInput(float dt) {
@@ -101,4 +102,28 @@ void Game::Render() {
     //draw player
     Player->Draw(*Renderer);
     Ball->Draw(*Renderer);
+}
+
+bool CheckCollision(BallObject &one, GameObject &two) {
+    glm::vec2 center(one.Position + one.Radius);
+    glm::vec2 aabb_half_extents(two.Size.x / 2.0f, two.Size.y / 2.0f);
+    glm::vec2 aabb_center(two.Position.x + aabb_half_extents.x, two.Position.y + aabb_half_extents.y);
+
+    glm::vec2 difference = center - aabb_center;
+    glm::vec2 clamped = glm::clamp(difference, -aabb_half_extents, aabb_half_extents);
+
+    glm::vec2 closest = aabb_center + clamped;
+    difference = closest - center;
+    return glm::length(difference) < one.Radius;
+}
+
+void Game::DoCollisions() {
+    for (GameObject &box : this->Levels[this->Level].Bricks) {
+        if (!box.Destroyed) {
+            if (CheckCollision(*Ball, box)) {
+                if (!box.IsSolid)
+                    box.Destroyed = true;
+            }
+        }
+    }
 }
