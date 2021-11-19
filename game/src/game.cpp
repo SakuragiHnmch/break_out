@@ -3,12 +3,14 @@
 #include <renderer.h>
 #include "game_obj.h"
 #include "ball_object.h"
+#include "particle.h"
 
 #include <tuple>
 
 //game-related state data
 SpriteRenderer *Renderer;
 GameObject *Player;
+ParticleGenerator *Particles;
 
 const glm::vec2 INITIAL_BALL_VELOCITY(100.0f, -350.0f);
 const float BALL_RADIUS = 12.5f;
@@ -38,6 +40,7 @@ Game::~Game() {
 void Game::Init() {
     // load shaders
     ResourceManager::LoadShader("../shaders/face.vs", "../shaders/face.fs", nullptr, "sprite");
+    ResourceManager::LoadShader("../shaders/particle.vs", "../shaders/particle.fs", nullptr, "particle");
     // configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width), static_cast<float>(this->Height), 0.0f, -1.0f, 1.0f);
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
@@ -52,6 +55,7 @@ void Game::Init() {
     ResourceManager::LoadTexture("../images/block_solid.png", "block_solid");
     ResourceManager::LoadTexture("../images/paddle.png", "paddle");
     ResourceManager::LoadTexture("../images/awesomeface.png", "face");
+    ResourceManager::LoadTexture("../images/particle.png", "particle");
 
     // load levels
     GameLevel one;
@@ -75,11 +79,15 @@ void Game::Init() {
     // configure ball
     glm::vec2 ballPos = playerPos + glm::vec2(PLAYER_SIZE.x / 2.0f - BALL_RADIUS, -BALL_RADIUS * 2.0f);
     Ball = new BallObject(ballPos, BALL_RADIUS, INITIAL_BALL_VELOCITY, ResourceManager::GetTexture(("face")));
+
+    Particles = new ParticleGenerator(ResourceManager::GetShader("particle"), ResourceManager::GetTexture("particle"), 500);
 }
 
 void Game::Update(float dt) {
     Ball->Move(dt, this->Width);
     this->DoCollisions();
+
+    Particles->Update(dt, *Ball, 2, glm::vec2(Ball->Radius / 2.0f));
 
     if (Ball->Position.y >= this->Height) {
         this->ResetLevel();
@@ -117,6 +125,7 @@ void Game::Render() {
     this->Levels[this->Level].Draw(*Renderer);
     //draw player
     Player->Draw(*Renderer);
+    Particles->Draw();
     Ball->Draw(*Renderer);
 }
 

@@ -10,6 +10,7 @@ set (SOURCES
         src/game_obj.cpp
         src/game_level.cpp
         src/ball_object.cpp
+        src/particle.cpp
 )
 
 add_library(game STATIC ${SOURCES})
